@@ -41,7 +41,7 @@ end
 
 class TweetUser
 
-  attr_accessor :screen_name, :description, :followers, :location, :name, :website, :_id
+  attr_accessor :screen_name, :description, :followers_count, :location, :name, :website, :_id
   
   def initialize(user)
     @_id = user.id
@@ -53,9 +53,19 @@ class TweetUser
     @website = user.website
   end
 
-  def instance_vars
-    Hash[instance_variables.map { |name| [name.to_s[1..-1], instance_variable_get(name)] }]
-  end 
+  def url
+    @website ? @website.display_uri.to_s : nil
+  end
+
+  def method_missing(method, *args, &block)
+    ivar_name = "@#{method}".intern
+
+    if instance_variable_defined? ivar_name
+      instance_variable_get ivar_name
+    else
+      super method, *args, &block
+    end
+  end  
 end
 
 class ConfigFile
@@ -82,9 +92,16 @@ rest = RestAPI.new(cf.address)
 
 twitter.search_hashtag(ARGV[0], ARGV[1].to_i).each do |t|
   tweet = Tweet.new(t)
-   
-  rest.tweets.post({ name: tweet.name, body: tweet.body, user_id: tweet.user_id }) 
-  rest.users.post(tweet.user.instance_vars)
+  
+  begin  
+    rest.tweets.post({ name: tweet.name, body: tweet.body, user_id: tweet.user_id })
+  
+    rest.users.post({ _id: tweet.user._id, screen_name: tweet.user.screen_name, description: tweet.user.description, 
+                      followers_count: tweet.user.followers_count, location: tweet.user.location, name: tweet.user.name, 
+                      website: tweet.user.url })
+  rescue Exception => e 
+    puts e.message 
+  end
 
 end
 
