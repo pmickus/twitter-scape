@@ -10,7 +10,7 @@ Also the config.yml must be edited to include twitter API tokens. Use http://52.
 ```
 ruby twitter-scaper.rb <hashtag w/out the #> <number of tweets to find>
 ruby twitter-scaper.rb analytics 3
-'''
+```
 
 # Considerations
 Seems to work best with low counts. Hangs up for some reason. Will get a 500 if the user already exists. 
