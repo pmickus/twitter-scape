@@ -53,19 +53,9 @@ class TweetUser
     @website = user.website
   end
 
-  def url
-    @website ? @website.display_uri.to_s : nil
+  def instance_variables_hash
+    Hash[instance_variables.map { |name| [name.to_s[1..-1], instance_variable_get(name).nil? ? nil : instance_variable_get(name)] } ]
   end
-
-  def method_missing(method, *args, &block)
-    ivar_name = "@#{method}".intern
-
-    if instance_variable_defined? ivar_name
-      instance_variable_get ivar_name
-    else
-      super method, *args, &block
-    end
-  end  
 end
 
 class ConfigFile
@@ -96,9 +86,8 @@ twitter.search_hashtag(ARGV[0], ARGV[1].to_i).each do |t|
   begin  
     rest.tweets.post({ name: tweet.name, body: tweet.body, user_id: tweet.user_id })
   
-    rest.users.post({ _id: tweet.user._id, screen_name: tweet.user.screen_name, description: tweet.user.description, 
-                      followers_count: tweet.user.followers_count, location: tweet.user.location, name: tweet.user.name, 
-                      website: tweet.user.url })
+    rest.users.post(tweet.user.instance_variables_hash) 
+   
   rescue Exception => e 
     puts e.message 
   end
