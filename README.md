@@ -13,11 +13,11 @@ ruby twitter-scaper.rb analytics 3
 ```
 
 # Considerations
-Seems to work best with low counts. Hangs up for some reason. Will get a 500 if the user already exists. 
+~~Seems to work best with low counts. Hangs up for some reason.~~ Will get a 500 if the user already exists. 
 
 # If I had more time
 Write tests
-Figure out why it hangs
+~~Figure out why it hangs~~
 Better exception handling
 
 
