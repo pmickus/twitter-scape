@@ -4,7 +4,7 @@ Assumes you have a newer version of ruby installed. You need the following gems.
 gem install twitter
 gem install rest-client
 ```
-Also the config.yml must be edited to include twitter API tokens. Use http://52.4.188.24:3000 for rest address. 
+Also the config.yml must be edited to include twitter API tokens. Use http://52.4.188.24/api for rest address. 
 
 # Running
 ```
